@@ -659,3 +659,10 @@ The race: GC begins mark phase traversing all reachable objects. A concurrent co
 ### Screenshot 4C — Phase 4: HEAD and refs output
 ![4C](4c.png)
 
+
+### Final Screenshot — Integration Test (Part 1)
+![Final1](final1.png)
+
+### Final Screenshot — Integration Test (Part 2)
+![Final2](final2.png)
+
