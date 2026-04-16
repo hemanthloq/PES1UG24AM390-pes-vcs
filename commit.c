@@ -197,3 +197,4 @@ int commit_create(const char *message, ObjectID *commit_id_out) {
 
 
 /* Phase 4: commit serialize */
+/* Phase 4: commit parse */
