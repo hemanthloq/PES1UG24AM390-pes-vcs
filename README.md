@@ -627,3 +627,35 @@ Use mark-and-sweep: collect all branch tip hashes from .pes/refs/heads/ and HEAD
 
 The race: GC begins mark phase traversing all reachable objects. A concurrent commit writes a new blob to the object store, then starts building a tree. GC finishes its mark phase — the new blob was written after traversal so GC considers it unreachable. GC deletes the blob. The commit finishes writing its tree referencing the now-deleted blob, corrupting the repository. Git avoids this with a 2-week grace period — objects newer than 2 weeks are never deleted even if unreachable, since any commit operation completes in seconds. Git also uses lock files to prevent concurrent writes to reference files.
 
+
+---
+
+## Lab Report Screenshots — R HEMANTH REDDY (PES1UG24AM390)
+
+### Screenshot 1A — Phase 1: test_objects output
+![1A](1a.png)
+
+### Screenshot 1B — Phase 1: object store directory structure
+![1B](1b.png)
+
+### Screenshot 2A — Phase 2: test_tree output
+![2A](2a.png)
+
+### Screenshot 2B — Phase 2: raw binary xxd dump
+![2B](2b.png)
+
+### Screenshot 3A — Phase 3: pes status output
+![3A](3a.png)
+
+### Screenshot 3B — Phase 3: cat .pes/index output
+![3B](3b.png)
+
+### Screenshot 4A — Phase 4: pes log output
+![4A](4a.png)
+
+### Screenshot 4B — Phase 4: find .pes -type f output
+![4B](4b.png)
+
+### Screenshot 4C — Phase 4: HEAD and refs output
+![4C](4c.png)
+
