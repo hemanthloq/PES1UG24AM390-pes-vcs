@@ -137,3 +137,4 @@ int tree_from_index(ObjectID *id_out) {
 }/* Phase 2: tree object implementation */
 /* Phase 2: tree parse implementation */
 /* Phase 2: sorting entries */
+/* Phase 2: file mode detection */
