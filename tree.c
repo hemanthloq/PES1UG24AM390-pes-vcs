@@ -134,4 +134,4 @@ int tree_from_index(ObjectID *id_out) {
     // (See Lab Appendix for logical steps)
     (void)id_out;
     return -1;
-}
+}/* Phase 2: tree object implementation */
