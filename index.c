@@ -185,3 +185,4 @@ int index_add(Index *index, const char *path) {
     free(data);
     return index_save(index);
 }
+/* Phase 3: index load implementation */
