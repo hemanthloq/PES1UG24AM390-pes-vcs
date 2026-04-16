@@ -602,3 +602,28 @@ The following questions cover filesystem concepts beyond the implementation scop
 - **The Git Parable**: https://tom.preston-werner.com/2009/05/19/the-git-parable.html
 # PES-VCS Lab - R HEMANTH REDDY - PES1UG24AM390
 /* Phase 5 & 6: analysis complete */
+
+---
+
+## Phase 5 & 6: Written Analysis — R HEMANTH REDDY (PES1UG24AM390)
+
+### Q5.1 — How would you implement pes checkout branch?
+
+To implement checkout, HEAD must be updated to write "ref: refs/heads/<branch>" into .pes/HEAD. The working directory must then be updated to match the target branch's tree by reading the commit pointed to by the target branch, reading the root tree object, and recursively writing each blob back to the filesystem. This is complex because: files modified since last staging must be detected and checkout must refuse if they differ between branches; subdirectories must be created or deleted as needed; and if checkout fails halfway the repository is in an inconsistent state, so changes should be staged atomically.
+
+### Q5.2 — How would you detect a dirty working directory conflict?
+
+For each entry in the index, use stat() to compare mtime and size against the stored metadata. If either differs, re-hash the file and compare its blob hash to the index. If they differ the file is dirty. Then read the target branch's tree from the object store and check if that dirty file also differs from what the target branch expects. If a dirty file differs from both the current index AND the target tree, checkout must refuse. This uses only the index for metadata and the object store for blob hash comparison.
+
+### Q5.3 — What happens in detached HEAD state and how to recover?
+
+In detached HEAD state, new commits are created normally and HEAD is updated to point directly to each new commit hash. But no branch reference file is updated so these commits are unreachable from any branch. If you switch away they appear lost. To recover, create a new branch pointing at the hash before switching: "pes branch recovery-branch". If already switched away, find the hash from terminal history and run "pes branch recovered <hash>".
+
+### Q6.1 — Algorithm to find and delete unreachable objects
+
+Use mark-and-sweep: collect all branch tip hashes from .pes/refs/heads/ and HEAD. Do a BFS/DFS from each root commit, marking every commit, tree, and blob hash as reachable in a hash set. Then walk all files under .pes/objects/ and delete any whose hash is not in the reachable set. A hash set gives O(1) average lookup. For 100,000 commits and 50 branches, assuming 1 commit + 10 trees + 20 blobs per commit, you would visit approximately 3,100,000 objects during the mark phase. Shared objects reduce actual visits since the reachable set deduplicates them.
+
+### Q6.2 — Race condition between GC and concurrent commit
+
+The race: GC begins mark phase traversing all reachable objects. A concurrent commit writes a new blob to the object store, then starts building a tree. GC finishes its mark phase — the new blob was written after traversal so GC considers it unreachable. GC deletes the blob. The commit finishes writing its tree referencing the now-deleted blob, corrupting the repository. Git avoids this with a 2-week grace period — objects newer than 2 weeks are never deleted even if unreachable, since any commit operation completes in seconds. Git also uses lock files to prevent concurrent writes to reference files.
+
