@@ -188,3 +188,4 @@ int index_add(Index *index, const char *path) {
 /* Phase 3: index load implementation */
 /* Phase 3: index save implementation */
 /* Phase 3: index add implementation */
+/* Phase 3: index find and remove */
